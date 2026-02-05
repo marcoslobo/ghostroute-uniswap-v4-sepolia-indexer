@@ -1,0 +1,78 @@
+type Pool {
+  # id is the pool id (bytes32)
+  id: ID!
+  # currency0 address
+  currency0: String!
+  # currency1 address
+  currency1: String!
+  # fee tier
+  fee: Int!
+  # tick spacing
+  tickSpacing: Int!
+  # hooks address (if any)
+  hooks: String!
+  # current sqrt price
+  sqrtPriceX96: BigInt!
+  # current tick
+  tick: Int!
+  # total liquidity
+  liquidity: BigInt!
+  # swaps in this pool
+  swaps: [Swap!]! @derivedFrom(field: "pool")
+  # liquidity modifications in this pool
+  liquidityModifications: [LiquidityModification!]! @derivedFrom(field: "pool")
+  # creation block number
+  createdAtBlockNumber: BigInt!
+  # creation timestamp
+  createdAtTimestamp: BigInt!
+}
+
+type Swap {
+  # id is transaction hash + log index
+  id: ID!
+  # pool id
+  pool: Pool!
+  # sender address
+  sender: String!
+  # amount of currency0
+  amount0: BigInt!
+  # amount of currency1
+  amount1: BigInt!
+  # sqrt price after swap
+  sqrtPriceX96: BigInt!
+  # liquidity at the time of swap
+  liquidity: BigInt!
+  # tick after swap
+  tick: Int!
+  # fee for this swap
+  fee: Int!
+  # block number
+  blockNumber: BigInt!
+  # timestamp
+  timestamp: BigInt!
+  # transaction hash
+  transactionHash: String!
+}
+
+type LiquidityModification {
+  # id is transaction hash + log index
+  id: ID!
+  # pool id
+  pool: Pool!
+  # sender address
+  sender: String!
+  # lower tick
+  tickLower: Int!
+  # upper tick
+  tickUpper: Int!
+  # liquidity delta (positive for add, negative for remove)
+  liquidityDelta: BigInt!
+  # salt (for unique position identification)
+  salt: String!
+  # block number
+  blockNumber: BigInt!
+  # timestamp
+  timestamp: BigInt!
+  # transaction hash
+  transactionHash: String!
+}

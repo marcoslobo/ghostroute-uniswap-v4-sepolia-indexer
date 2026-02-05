@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: uniswap-v4-sepolia-indexer
+description: Uniswap V4 indexer for Sepolia testnet
+# Field selection to include transaction hash in events
+field_selection:
+  transaction_fields:
+    - hash
+networks:
+  - id: 11155111 # Sepolia Testnet
+    start_block: 7000000
+    contracts:
+      - name: PoolManager
+        address: "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543"
+        handler: src/EventHandlers.ts
+        events:
+          - event: "Initialize(bytes32 indexed id, address indexed currency0, address indexed currency1, uint24 fee, int24 tickSpacing, address hooks, uint160 sqrtPriceX96, int24 tick)"
+          - event: "Swap(bytes32 indexed id, address indexed sender, int128 amount0, int128 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick, uint24 fee)"
+          - event: "ModifyLiquidity(bytes32 indexed id, address indexed sender, int24 tickLower, int24 tickUpper, int256 liquidityDelta, bytes32 salt)"
+# Unordered multichain mode allows you to index events from multiple chains
+# in realtime but doesn't guarentee ordering between chains
+# https://docs.envio.dev/docs/HyperIndex/multichain-indexing#unordered-multichain-mode
+unordered_multichain_mode: false
+# Preload optimisation makes your indexer much faster.
+# But be aware that your handlers will run twice,
+# so make sure to use Effect API for external calls.
+preload_handlers: true
+# Address format for Ethereum addresses: 'checksum' or 'lowercase'
+# using lowercase addresses is slightly faster
+address_format: lowercase
