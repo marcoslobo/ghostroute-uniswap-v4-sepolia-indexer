@@ -1,10 +1,29 @@
+type Token {
+  # token address (lowercase)
+  id: ID!
+  # token symbol (e.g., "USDC", "WETH")
+  symbol: String!
+  # token decimals (e.g., 18, 6)
+  decimals: Int!
+  # token name (optional, e.g., "USD Coin")
+  name: String
+  # pools where this token is currency0
+  poolsAsCurrency0: [Pool!]! @derivedFrom(field: "token0")
+  # pools where this token is currency1
+  poolsAsCurrency1: [Pool!]! @derivedFrom(field: "token1")
+}
+
 type Pool {
   # id is the pool id (bytes32)
   id: ID!
-  # currency0 address
+  # currency0 address (kept for backwards compatibility)
   currency0: String!
-  # currency1 address
+  # currency1 address (kept for backwards compatibility)
   currency1: String!
+  # token0 entity with metadata
+  token0: Token!
+  # token1 entity with metadata
+  token1: Token!
   # fee tier
   fee: Int!
   # tick spacing
